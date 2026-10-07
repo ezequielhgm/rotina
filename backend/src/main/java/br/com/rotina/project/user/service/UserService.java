@@ -1,6 +1,8 @@
 package br.com.rotina.project.user.service;
 
 import br.com.rotina.project.user.entity.User;
+import br.com.rotina.project.user.dto.UserRequest;
+import br.com.rotina.project.user.dto.UserResponse;
 import br.com.rotina.project.user.repository.UserRepository;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -21,34 +23,54 @@ public class UserService {
     }
 
     @Transactional
-    public User create(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+    public UserResponse create(UserRequest request) {
+        User user = new User();
+        applyRequest(user, request);
+        return toResponse(userRepository.save(user));
     }
 
     @Transactional(readOnly = true)
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserResponse> findAll() {
+        return userRepository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public User findById(Integer id) {
+    public UserResponse findById(Integer id) {
+        return toResponse(findEntityById(id));
+    }
+
+    private User findEntityById(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 
     @Transactional
-    public User update(Integer id, User data) {
-        User user = findById(id);
-        user.setName(data.getName());
-        user.setEmail(data.getEmail());
-        user.setPhone(data.getPhone());
-        user.setPassword(passwordEncoder.encode(data.getPassword()));
-        return userRepository.save(user);
+    public UserResponse update(Integer id, UserRequest request) {
+        User user = findEntityById(id);
+        applyRequest(user, request);
+        return toResponse(userRepository.save(user));
     }
 
     @Transactional
     public void delete(Integer id) {
-        userRepository.delete(findById(id));
+        userRepository.delete(findEntityById(id));
+    }
+
+    private void applyRequest(User user, UserRequest request) {
+        user.setName(request.name());
+        user.setEmail(request.email());
+        user.setPhone(request.phone());
+        user.setPassword(passwordEncoder.encode(request.password()));
+    }
+
+    private UserResponse toResponse(User user) {
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getPhone()
+        );
     }
 }

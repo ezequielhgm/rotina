@@ -1,6 +1,7 @@
 package br.com.rotina.project.user.controller;
 
-import br.com.rotina.project.user.entity.User;
+import br.com.rotina.project.user.dto.UserRequest;
+import br.com.rotina.project.user.dto.UserResponse;
 import br.com.rotina.project.user.service.UserService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -27,28 +28,28 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@Valid @RequestBody User user) {
-        User createdUser = userService.create(user);
+    public ResponseEntity<UserResponse> create(@Valid @RequestBody UserRequest request) {
+        UserResponse createdUser = userService.create(request);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(createdUser.getId())
+                .buildAndExpand(createdUser.id())
                 .toUri();
         return ResponseEntity.created(location).body(createdUser);
     }
 
     @GetMapping
-    public List<User> findAll() {
+    public List<UserResponse> findAll() {
         return userService.findAll();
     }
 
     @GetMapping("/{id}")
-    public User findById(@PathVariable Integer id) {
+    public UserResponse findById(@PathVariable Integer id) {
         return userService.findById(id);
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable Integer id, @Valid @RequestBody User user) {
-        return userService.update(id, user);
+    public UserResponse update(@PathVariable Integer id, @Valid @RequestBody UserRequest request) {
+        return userService.update(id, request);
     }
 
     @DeleteMapping("/{id}")
