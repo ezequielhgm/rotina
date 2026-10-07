@@ -1,0 +1,28 @@
+# Backend build output (Maven / Java)
+/backend/target/
+*.class
+*.log
+hs_err_pid*
+
+# Frontend dependencies and build output
+/frontend/node_modules/
+/frontend/dist/
+/frontend/build/
+/frontend/.angular/
+/frontend/.vite/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# IDE settings
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
