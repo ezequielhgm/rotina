@@ -54,8 +54,10 @@ public class UserService {
     }
 
     @Transactional
-    public void delete(Integer id) {
-        userRepository.delete(findEntityById(id));
+    public UserResponse deactivate(Integer id) {
+        User user = findEntityById(id);
+        user.setActive(false);
+        return toResponse(userRepository.save(user));
     }
 
     private void applyRequest(User user, UserRequest request) {
@@ -63,6 +65,7 @@ public class UserService {
         user.setEmail(request.email());
         user.setPhone(request.phone());
         user.setPassword(passwordEncoder.encode(request.password()));
+        user.setActive(request.active() == null || request.active());
     }
 
     private UserResponse toResponse(User user) {
@@ -70,7 +73,8 @@ public class UserService {
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
-                user.getPhone()
+                user.getPhone(),
+                user.isActive()
         );
     }
 }

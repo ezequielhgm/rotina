@@ -9,67 +9,38 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "\"user\"", schema = "public")
+@Getter
+@Setter
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "usu_id")
+    @Column(name = "user_id")
     private Integer id;
 
     @NotBlank
-    @Column(name = "usu_name", nullable = false)
+    @Column(name = "user_name", nullable = false)
     private String name;
 
     @NotBlank
     @Email
-    @Column(name = "usu_email", nullable = false)
+    @Column(name = "user_email", nullable = false, unique = true)
     private String email;
 
     @NotBlank
-    @Column(name = "usu_phone", nullable = false)
+    @Column(name = "user_phone", nullable = false)
     private String phone;
 
     @NotBlank
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(name = "usu_password", nullable = false)
+    @Column(name = "user_password", nullable = false)
     private String password;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    @Column(name = "user_active", nullable = false)
+    private boolean active = true;
 }
