@@ -5,7 +5,8 @@ import java.time.LocalDate;
 public record TaskResponse(
         Integer id,
         Integer userId,
-        String name,
+        Integer categoryId,
+        String title,
         String description,
         LocalDate startDate,
         boolean active

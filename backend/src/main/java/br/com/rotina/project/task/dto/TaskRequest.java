@@ -6,7 +6,8 @@ import java.time.LocalDate;
 
 public record TaskRequest(
         @NotNull Integer userId,
-        @NotBlank String name,
+        Integer categoryId,
+        @NotBlank String title,
         String description,
         @NotNull LocalDate startDate,
         Boolean active
